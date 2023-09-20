@@ -23,11 +23,12 @@ def generate_mjpeg():
             byteData = convert_image(image)
             yield (b'--frame\r\n'
                    b'Content-Type: image/jpeg\r\n\r\n' + byteData + b'\r\n\r\n')
-        time.sleep(0.02)  # Adjust this delay as needed
+        time.sleep(1/5)  # Adjust this delay as needed
 
 
 def convert_image(data):
     image = Image.frombuffer("RGB", (1224, 1024), data)
+    image = image.resize((640, 512))
 # Convert the PIL Image to JPEG binary
     buffer = BytesIO()
     image.save(buffer, format="JPEG")
