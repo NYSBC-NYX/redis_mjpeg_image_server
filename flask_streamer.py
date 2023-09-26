@@ -1,4 +1,4 @@
-from flask import Flask, Response
+from flask import Flask, Response, send_file
 import redis
 import time
 from PIL import Image
@@ -46,7 +46,14 @@ def video_feed():
     return Response(generate_mjpeg(),
                     mimetype='multipart/x-mixed-replace; boundary=frame')
 
-
+@app.route('/video_feed2')
+def video_feed2():
+    data = redis_client.get('bzoom:RAW')
+    image = convert_image(data)
+    if image:
+        return send_file(BytesIO(image), mimetype='image/jpeg')
+    else:
+        return "No image available", 404
 
 
 
