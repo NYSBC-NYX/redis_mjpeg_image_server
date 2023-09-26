@@ -6,7 +6,7 @@ from io import BytesIO
 import numpy as np
 
 app = Flask(__name__)
-redis_client = redis.StrictRedis(host='10.67.146.131', port=6379, db=0)
+redis_client = redis.StrictRedis(host='127.0.0.1', port=6379, db=0)
 img_width = 1224
 img_height = 1024
 img_size = (img_width,img_height)
@@ -51,4 +51,4 @@ def video_feed():
 
 
 if __name__ == '__main__':
-    app.run(host='10.67.147.26', port=3909)
+    app.run(host='localhost', port=8000)

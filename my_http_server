@@ -1,0 +1,76 @@
+# Stream an edited video camera image to HTTP JPEG format (MJPEG)
+
+# Capture a USB camera image using openCV
+# Change the image using openCV
+# Serve the image as HTTP in MIME multipart JPG format and each image replaces the previous
+
+import cv2
+import threading
+from http.server import BaseHTTPRequestHandler,HTTPServer
+from socketserver import ThreadingMixIn
+import time
+from PIL import Image
+from io import BytesIO
+import redis
+
+capture=None
+
+def convert_image():
+    data = capture.get('bzoom:RAW')
+    image = Image.frombuffer("RGB", (1224, 1024), data)
+    image = image.resize((640, 512))
+# Convert the PIL Image to JPEG binary
+    buffer = BytesIO()
+    image.save(buffer, format="JPEG")
+    jpeg_binary = buffer.getvalue()
+
+    # Convert the image to jpg format and get the data as bytes
+    return True, jpeg_binary
+
+
+class CamHandler(BaseHTTPRequestHandler):
+	def do_GET(self):
+		if self.path.endswith('.mjpg'):
+			self.send_response(200)
+			self.send_header('Content-type','multipart/x-mixed-replace; boundary=--jpgboundary')
+			self.end_headers()
+			while True:
+				try:
+					rc,tmpFile = convert_image()
+					if not rc:
+						continue
+					self.wfile.write("--jpgboundary".encode())
+					self.send_header('Content-type','image/jpeg')
+					self.end_headers()
+					jpg.save(self.wfile,'JPEG')
+					time.sleep(0.05)
+				except KeyboardInterrupt:
+					break
+			return
+		if self.path.endswith('.html'):
+			self.send_response(200)
+			self.send_header('Content-type','text/html')
+			self.end_headers()
+			self.wfile.write('<html><head></head><body>'.encode())
+			self.wfile.write('<img src="http://127.0.0.1:8087/cam.mjpg"/>'.encode())
+			self.wfile.write('</body></html>'.encode())
+			return
+
+
+class ThreadedHTTPServer(ThreadingMixIn, HTTPServer):
+	"""Handle requests in a separate thread."""
+
+def main():
+	global capture
+	capture = redis.StrictRedis(host='127.0.0.1', port=6379, db=0)
+	global img
+	try:
+		server = ThreadedHTTPServer(('localhost', 8087), CamHandler)
+		print( "server started")
+		server.serve_forever()
+	except KeyboardInterrupt:
+		capture.release()
+		server.socket.close()
+
+if __name__ == '__main__':
+	main()

@@ -54,33 +54,33 @@ image_poster_thread.start()
 stream_url = "http://localhost:8000/video_feed"
 
 # Open the stream
-
+'''
 cap = cv2.VideoCapture(stream_url)
 cap.set(cv2.CAP_PROP_BUFFERSIZE, 0)
 prevcount = 0
-x = 0
 while True:
     # Capture frame-by-frame
     ret, frame = cap.read()
 
     # Display the resulting frame
+    t = time.process_time()
     cv2.imshow('frame', frame)
-    print('time: {}'.format(x))
+    x = time.process_time() - t
+    print('time taken to read: {}'.format(x))
     # Break the loop on 'q' key press
 
 
 
     if cv2.waitKey(int((sleeptime)*1000)) & 0xFF == ord('q'):
-        print('key was pressed on: {}'.format(x))
-        currcount = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
-        print('length of buffer: {}'.format(currcount))
-        prevcount = currcount
+        #print('key was pressed on: {}'.format(x))
+        #currcount = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
+        #print('length of buffer: {}'.format(currcount))
+        #prevcount = currcount
 
         input('hello')
 
 
-        x = 0
-    x = x+1
+
         
     
 
@@ -89,3 +89,4 @@ cap.release()
 cv2.destroyAllWindows()
 
 
+'''
