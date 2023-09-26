@@ -23,7 +23,8 @@ def generate_mjpeg():
             byteData = convert_image(image)
             yield (b'--frame\r\n'
                    b'Content-Type: image/jpeg\r\n\r\n' + byteData + b'\r\n\r\n')
-        time.sleep(1/5)  # Adjust this delay as needed
+        time.sleep(1/5
+)  # Adjust this delay as needed
 
 
 def convert_image(data):
@@ -51,4 +52,4 @@ def video_feed():
 
 
 if __name__ == '__main__':
-    app.run(host='10.67.147.26', port=3909)
+    app.run(host='10.67.147.26', port=3908)
