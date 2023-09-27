@@ -35,7 +35,7 @@ images.append(images[-1])
 
 
 #EDIT THE TIME HERE
-fps = 5
+fps = 2
 sleeptime = 1/fps
 
 image_poster_thread = threading.Thread(target=run_imagePoster_indefinitely, args=(sleeptime, images))
@@ -51,17 +51,21 @@ image_poster_thread.start()
 
 
 # Define the video stream
-stream_url = "http://localhost:8000/video_feed"
+stream_url = "http://localhost:8000/video_feed2"
 
 # Open the stream
-'''
-cap = cv2.VideoCapture(stream_url)
-cap.set(cv2.CAP_PROP_BUFFERSIZE, 0)
+
+
 prevcount = 0
 while True:
+    cap = cv2.VideoCapture(stream_url)
+    cap.set(cv2.CAP_PROP_BUFFERSIZE, 0)
+    #time.sleep(1/fps)
     # Capture frame-by-frame
     ret, frame = cap.read()
-
+    if not ret:
+        print('hi')
+        break
     # Display the resulting frame
     t = time.process_time()
     cv2.imshow('frame', frame)
@@ -89,4 +93,3 @@ cap.release()
 cv2.destroyAllWindows()
 
 
-'''
