@@ -4,9 +4,10 @@ import time
 from PIL import Image
 from io import BytesIO
 import numpy as np
+from threading import Thread
 
 app = Flask(__name__)
-redis_client = redis.StrictRedis(host='10.67.146.131', port=6379, db=0)
+redis_client = redis.StrictRedis(host='localhost', port=6379, db=0)
 img_width = 1224
 img_height = 1024
 img_size = (img_width,img_height)
@@ -23,13 +24,36 @@ def generate_mjpeg():
             byteData = convert_image(image)
             yield (b'--frame\r\n'
                    b'Content-Type: image/jpeg\r\n\r\n' + byteData + b'\r\n\r\n')
-        time.sleep(1/5
-)  # Adjust this delay as needed
+
+
+
+
+
+def generate_small_mjpeg():
+    while True:
+        data = redis_client.get('bzoom:RESIZED')  
+
+        #convert raw image file to jpg
+
+        # with open('output.jpg', 'rb') as f:
+        #     image = f.read()
+        if data:
+            image = Image.frombuffer("RGB", (640, 512), data)
+            buffer = BytesIO()
+            image.save(buffer, format="JPEG")
+            jpeg_binary = buffer.getvalue()
+            yield (b'--frame\r\n'
+                   b'Content-Type: image/jpeg\r\n\r\n' + jpeg_binary + b'\r\n\r\n')
+
+
+
 
 
 def convert_image(data):
     image = Image.frombuffer("RGB", (1224, 1024), data)
     image = image.resize((640, 512))
+
+
 # Convert the PIL Image to JPEG binary
     buffer = BytesIO()
     image.save(buffer, format="JPEG")
@@ -46,6 +70,15 @@ def video_feed():
     return Response(generate_mjpeg(),
                     mimetype='multipart/x-mixed-replace; boundary=frame')
 
+
+
+@app.route('/video_feed_small')
+def video_feed_small():
+    
+    return Response(generate_small_mjpeg(),
+                    mimetype='multipart/x-mixed-replace; boundary=frame')
+
+
 @app.route('/video_feed2')
 def video_feed2():
     data = redis_client.get('bzoom:RAW')
@@ -56,7 +89,24 @@ def video_feed2():
         return "No image available", 404
 
 
+def send_image_to_redis():
+    while True:
+        data = redis_client.get('bzoom:RAW')
+        if data:
+            original_image = Image.frombuffer("RGB", (1224, 1024), data)
+            resized_image = original_image.resize((640,512))
+            out_string = resized_image.tobytes()
+            redis_client.set('bzoom:RESIZED', out_string)
+        time.sleep(1/20)
+
+
+
+
 
 
 if __name__ == '__main__':
-    app.run(host='10.67.147.26', port=3908)
+    image_resizer_thread = Thread(target = send_image_to_redis)
+    image_resizer_thread.start()
+    app.run(host='localhost', port=3908)
+    image_resizer_thread.join()
+
