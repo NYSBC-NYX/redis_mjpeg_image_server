@@ -18,7 +18,7 @@ def send_image_to_redis():
 
 
 def run_uwsgi_server():
-    callCommand = ['uwsgi' ,'--socket', '192.168.1.201:3909', '--protocol' ,'http' ,'--master' ,'-p' ,'5' ,'-w' ,'wsgi:app','--logto', './uwsgi_server.log'] 
+    callCommand = ['uwsgi' ,'--socket', '10.67.147.26:3908', '--protocol' ,'http' ,'--master' ,'-p' ,'5' ,'-w' ,'wsgi:app','--logto', './uwsgi_server.log'] 
     with open('uwsgi_server.log', 'a') as uwsgi_log:
         dt_string = datetime.datetime.now().strftime("%d/%m/%Y %H:%M:%S")
         uwsgi_log.write('UWSGI flask server started at time: {} \n'.format(dt_string))
