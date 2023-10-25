@@ -1,0 +1,39 @@
+*** Starting uWSGI 2.0.22 (64bit) on [Wed Oct 25 16:57:28 2023] ***
+compiled with version: Apple LLVM 14.0.3 (clang-1403.0.22.14.1) on 20 September 2023 16:35:31
+os: Darwin-22.5.0 Darwin Kernel Version 22.5.0: Mon Apr 24 20:53:44 PDT 2023; root:xnu-8796.121.2~5/RELEASE_ARM64_T8103
+nodename: Rudras-Air
+machine: arm64
+clock source: unix
+detected number of CPU cores: 8
+current working directory: /Users/rudesubs/Desktop/work/current_work/redis_to_mjpeg
+detected binary path: /Users/rudesubs/Desktop/work/current_work/redis_to_mjpeg/virtual_environment/bin/uwsgi
+!!! no internal routing support, rebuild with pcre support !!!
+your processes number limit is 2666
+your memory page size is 16384 bytes
+detected max file descriptor number: 8192
+lock engine: OSX spinlocks
+thunder lock: disabled (you can enable it with --thunder-lock)
+uwsgi socket 0 bound to TCP address 192.168.1.201:3909 fd 3
+Python version: 3.11.5 (main, Aug 24 2023, 15:09:45) [Clang 14.0.3 (clang-1403.0.22.14.1)]
+*** Python threads support is disabled. You can enable it with --enable-threads ***
+Python main interpreter initialized at 0x10568a218
+your server socket listen backlog is limited to 100 connections
+your mercy for graceful operations on workers is 60 seconds
+mapped 437376 bytes (427 KB) for 5 cores
+*** Operational MODE: preforking ***
+WSGI app 0 (mountpoint='') ready in 1 seconds on interpreter 0x10568a218 pid: 72113 (default app)
+*** uWSGI is running in multiple interpreter mode ***
+spawned uWSGI master process (pid: 72113)
+spawned uWSGI worker 1 (pid: 72115, cores: 1)
+spawned uWSGI worker 2 (pid: 72116, cores: 1)
+spawned uWSGI worker 3 (pid: 72117, cores: 1)
+spawned uWSGI worker 4 (pid: 72118, cores: 1)
+spawned uWSGI worker 5 (pid: 72119, cores: 1)
+SIGINT/SIGTERM received...killing workers...
+worker 5 buried after 1 seconds
+worker 4 buried after 1 seconds
+worker 3 buried after 1 seconds
+worker 2 buried after 1 seconds
+worker 1 buried after 1 seconds
+goodbye to uWSGI.
+UWSGI flask server started at time: 25/10/2023 16:57:28 
